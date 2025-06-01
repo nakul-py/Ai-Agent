@@ -2,8 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 import { inngest } from "../inngest/client.js";
-import user from "../models/user.js";
-import { err } from "inngest/types";
 
 export const signup = async (req, res) => {
   const { email, password, skills = [] } = req.body;
@@ -101,16 +99,19 @@ export const updateUser = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
-    if (req.user?.role !== "admin"){
-      res.status(403).json({ error: "🔴 Forbidden: Only admins can get user details." });
+    if (req.user?.role !== "admin") {
+      res
+        .status(403)
+        .json({ error: "🔴 Forbidden: Only admins can get user details." });
     }
     const users = await User.find().select("-password -__v");
     if (!users || users.length === 0) {
       return res.status(404).json({ error: "🔴 No users found" });
     }
     return res.json({ users });
-    
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve user", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve user", details: error.message });
   }
-}
+};
