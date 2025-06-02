@@ -71,7 +71,8 @@ export const onTicketCreation = inngest.createFunction(
 
       await step.run("send-email-notificaton", async () => {
         if (moderator) {
-          const finalTicket = await sendMail(
+          const finalTicket = await Ticket.findById(ticket._id);
+          await sendMail(
             moderator.email,
             "New Ticket Assigned",
             `A new ticket has been assigned to ${finalTicket.title}.`
