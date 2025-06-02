@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import user from './models/user';
+import userRoutes from './routes/user.js';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
