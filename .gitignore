@@ -1,2 +1,4 @@
 ai-Ticket-Assistant/.env
 ai-Ticket-Assistant/node_modules
+ai-Ticket-Frontend/node_modules
+ai-Ticket-Frontend/.env
