@@ -4,8 +4,8 @@ import { createTicket, getTickets, getTicket } from "../controller/ticket.js";
 
 const router = express.Router();
 
-router.post("/create", authenticate, createTicket);
-router.get("/tickets", authenticate, getTickets);
-router.get("/ticket/:id", authenticate, getTicket);
+router.post("/", authenticate, createTicket);
+router.get("/", authenticate, getTickets);
+router.get("/:id", authenticate, getTicket);
 
 export default router;

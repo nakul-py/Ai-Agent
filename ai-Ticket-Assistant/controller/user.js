@@ -4,10 +4,10 @@ import User from "../models/user.js";
 import { inngest } from "../inngest/client.js";
 
 export const signup = async (req, res) => {
-  const { email, password, skills = [] } = req.body;
+  const { username ,email, password, skills = [] } = req.body;
   try {
-    const hashPswd = bcrypt.hash(password, 10);
-    const user = await User.create({ email, password: hashPswd, skills });
+    const hashPswd = await bcrypt.hash(password, 10);
+    const user = await User.create({ username, email, password: hashPswd, skills });
 
     // Fire the Inngest event for user signup
     await inngest.send({
@@ -23,6 +23,7 @@ export const signup = async (req, res) => {
         email: user.email,
         role: user.role,
         skills: user.skills,
+        username: user.username,
       },
       process.env.JWT_SECRET
     );
@@ -51,6 +52,7 @@ export const login = async (req, res) => {
         email: user.email,
         role: user.role,
         skills: user.skills,
+        username: user.username,
       },
       process.env.JWT_SECRET
     );
@@ -89,6 +91,7 @@ export const updateUser = async (req, res) => {
 
     User.updateOne(
       { email },
+      {username},
       { skills: skills.length ? skills : user.skills, role }
     );
     return res.json({ message: "🔵 User updated successfully" });

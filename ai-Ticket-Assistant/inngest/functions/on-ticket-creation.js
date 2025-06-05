@@ -7,7 +7,7 @@ import { analyzeTicket } from "../../libs/ticket-ai.js";
 
 export const onTicketCreation = inngest.createFunction(
   { id: "on-ticket-creation", retries: 2 },
-  { event: "ticket.creation" },
+  { event: "ticket/created" },
   async ({ event, step }) => {
     try {
       const { ticketId } = event.data;
@@ -15,12 +15,12 @@ export const onTicketCreation = inngest.createFunction(
       // Fetch the ticket details from the database
       const ticket = await step.run("get-ticket", async () => {
         const ticketObject = await Ticket.findById(ticketId);
-        if (!ticketObject) {
+        if (!ticket) {
           throw new NonRetriableError(
             `Ticket with ID ${ticketId} does not exist.`
           );
         }
-        return ticket;
+        return ticketObject;
       });
 
       await step.run("update-ticket-status", async () => {
@@ -29,7 +29,7 @@ export const onTicketCreation = inngest.createFunction(
 
       const aiResponse = await analyzeTicket(ticket);
 
-      await step.run("ai-processing", async () => {
+      const relatedSkills = await step.run("ai-processing", async () => {
         let skills = [];
         if (aiResponse) {
           await Ticket.findByIdAndUpdate(ticket._id, {
@@ -40,9 +40,7 @@ export const onTicketCreation = inngest.createFunction(
             status: "IN_PROGRESS",
             relatedSkills: aiResponse.relatedSkills,
           });
-          skills = aiResponse.relatedSkills
-            ? aiResponse.relatedSkills
-            : ["python", "javascript"];
+          skills = aiResponse.relatedSkills;
         }
         return skills;
       });
@@ -64,7 +62,7 @@ export const onTicketCreation = inngest.createFunction(
         }
 
         await Ticket.findByIdAndUpdate(ticket._id, {
-          assignedTo: user._id || null,
+          assignedTo: user?._id || null,
         });
         return user;
       });
@@ -80,7 +78,7 @@ export const onTicketCreation = inngest.createFunction(
         }
       });
 
-      return { success: true, ticketId: ticket._id };
+      return { success: true };
     } catch (error) {
       console.log(" ❌ Error in onTicketCreation:", error.message);
       return {
