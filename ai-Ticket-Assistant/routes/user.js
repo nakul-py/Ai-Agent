@@ -1,4 +1,4 @@
-import epress from "express";
+import express from "express";
 import {
   signup,
   login,
@@ -8,7 +8,7 @@ import {
 } from "../controller/user.js";
 import { authenticate } from "../middleware/auth.js";
 
-const router = epress.Router();
+const router = express.Router();
 
 router.post("/signup", signup);
 router.post("/login", login);
