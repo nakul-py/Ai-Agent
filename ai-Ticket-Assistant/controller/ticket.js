@@ -1,10 +1,9 @@
 import { inngest } from "../inngest/client.js";
-import ticket from "../models/ticket.js";
 import Ticket from "../models/ticket.js";
 
 export const createTicket = async (req, res) => {
   try {
-    const { title, description } = res.body;
+    const { title, description } = req.body;
     if (!title || !description) {
       return res
         .status(400)
@@ -33,7 +32,7 @@ export const createTicket = async (req, res) => {
     console.error("Error creating ticket:", error);
     return res
       .status(500)
-      .json({ message: "Failed to create ticket", error: error.message });
+      .json({ message: "Failed to create ticketddd", error: error.message });
   }
 };
 
@@ -48,7 +47,7 @@ export const getTickets = async (req, res) => {
         .sort({ createdAt: -1 });
     } else {
       tickets = await Ticket.find({ createdBy: user._id })
-        .select("title description status createdAt")
+        .select("title description status assignedTo priority helpfulNotes createdAt")
         .sort({ createdAt: -1 });
     }
     return res.status(200).json({ tickets });
@@ -74,12 +73,14 @@ export const getTicket = async (req, res) => {
       ticket = await Ticket.findOne({
         _id: req.params.id,
         createdBy: user._id,
-      }).select("title description status createdAt");
+      }).select("title description status assignedTo priority helpfulNotes relatedSkills createdAt");
     }
+    
 
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
+    console.log("Returned ticket:", ticket);
 
     return res.status(200).json({ ticket });
   } catch (error) {
