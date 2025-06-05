@@ -1,18 +1,21 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { login } from '../store/authSlice';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../store/authSlice";
+import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Logo from "../components/Logo";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [form, setForm] = React.useState({
-    username: "",
     email: "",
     password: "",
   });
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const handleChange = (e) => {
     setForm({
@@ -37,14 +40,13 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        // Dispatch login action to update the store
         dispatch(login({ token: data.token, user: data.user }));
-        navigate('/');
+        navigate("/");
       } else {
-        setError(data.message || 'Login failed');
+        setError(data.message || "Login failed");
       }
     } catch (error) {
-      setError('Something went wrong, please try again later');
+      setError("Something went wrong, please try again later");
       console.error(error);
     } finally {
       setLoading(false);
@@ -54,35 +56,51 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
       <div className="card w-full max-w-sm shadow-xl bg-base-100">
+      <div className="flex card-header justify-center pt-6">
+        <Logo width="30%"/>
+        </div>
         <form onSubmit={handleLogin} className="card-body">
           <h2 className="card-title justify-center">Login</h2>
+          <p className="mt-2 text-center text-base text-white/60">
+            Don&apos;t have any account?&nbsp;
+            <Link
+              to="/signup"
+              className="font-medium text-primary transistion-all duration-200 hover:underline hover:text-blue-600"
+            >
+              Sign Up
+            </Link>
+          </p>
 
           <input
             type="email"
             name="email"
             placeholder="Email"
-            className="input input-bordered"
+            className="input input-primary w-full text-sm"
             value={form.email}
             onChange={handleChange}
             required
           />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            className="input input-bordered"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              className="input input-success w-5/6 pr-10 text-sm"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+            <span
+              className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-lg text-gray-200"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          
           {/* Display error message */}
-          {error && (
-            <div className="text-red-500 text-sm mt-2">
-              {error}
-            </div>
-          )}
+          {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
           <div className="form-control mt-4">
             <button

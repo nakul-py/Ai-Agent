@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 function Admin() {
   const [users, setUsers] = useState([]);
@@ -7,8 +8,7 @@ function Admin() {
   const [formData, setFormData] = useState({ role: "", skills: "" });
   const [searchQuery, setSearchQuery] = useState("");
 
-  const token = localStorage.getItem("token");
-
+  const token = useSelector((state) => state.auth.token);
   const fetchUsers = async () => {
     try {
         const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/auth/users`, {
