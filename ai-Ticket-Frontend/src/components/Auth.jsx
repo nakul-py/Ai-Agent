@@ -1,34 +1,29 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-function Auth({children, protectedRoute }) {
+function Auth({ children, protected: isProtected }) {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-    const navigate = useNavigate();
-    const [loading, setLoading] = React.useState(true);
+  // Access the token from the Redux store
+  const token = useSelector((state) => state.auth.token);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token')
-        if(protectedRoute) {
-            if(!token) {
-                navigate('/login');
-            } else {
-                setLoading(false)
-            }
-        } else {
-            if(token) {
-                navigate('/');
-            } else {
-                setLoading(false)
-            }
-        }
-    }, [navigate, protectedRoute])
-
-
-    if (loading) {
-        return <div>Loading...</div>
+  useEffect(() => {
+    if (isProtected && !token) {
+      navigate('/login', { replace: true });
+    } else if (!isProtected && token) {
+      navigate('/', { replace: true });
+    } else {
+      setLoading(false);
     }
-    return children
-    
+  }, [navigate, isProtected, token]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return children;
 }
 
-export default Auth
+export default Auth;
