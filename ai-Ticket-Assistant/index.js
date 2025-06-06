@@ -7,6 +7,8 @@ import ticketRoutes from "./routes/ticket.js";
 import { inngest } from "./inngest/client.js";
 import { onTicketCreation } from "./inngest/functions/on-ticket-creation.js";
 import { onUserSignUp } from "./inngest/functions/on-signUP.js";
+import { onTicketDeletion } from "./inngest/functions/on-ticket-deletion.js";
+
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -27,9 +29,13 @@ app.use(
   "/api/inngest",
   serve({
     client: inngest,
-    functions: [onTicketCreation, onUserSignUp],
+    functions: [onTicketCreation, onUserSignUp , onTicketDeletion],
   })
 );
+
+app.delete("/tickets/:id", async (req, res) => {
+  onTicketDeletion(req, res, inngest);
+});
 
 console.log("Connecting to MongoDB...");
 
