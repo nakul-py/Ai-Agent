@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Tickets() {
   const [form, setForm] = useState({ title: "", description: "" });
@@ -7,14 +8,14 @@ function Tickets() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const token = localStorage.getItem("token");
+  const token = useSelector((state) => state.auth.token);
 
   const fetchTickets = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/ticket`, {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/tickets`, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          method: "GET",
         },
       });
       const data = await res.json();
@@ -59,7 +60,8 @@ function Tickets() {
         alert(data.message || "Ticket creation failed");
       }
     } catch (error) {
-      alert("Error fetching ticket", error);
+      alert("Error creating ticket", error);
+      console.error(error);
       setError("Something went wrong, please try again later");
     } finally {
       setLoading(false);
