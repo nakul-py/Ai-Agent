@@ -9,13 +9,14 @@ export const onTicketCreation = inngest.createFunction(
   { id: "on-ticket-creation", retries: 2 },
   { event: "ticket/created" },
   async ({ event, step }) => {
+
     try {
       const { ticketId } = event.data;
 
       // Fetch the ticket details from the database
       const ticket = await step.run("get-ticket", async () => {
         const ticketObject = await Ticket.findById(ticketId);
-        if (!ticket) {
+        if (!ticketObject) {
           throw new NonRetriableError(
             `Ticket with ID ${ticketId} does not exist.`
           );
@@ -24,10 +25,12 @@ export const onTicketCreation = inngest.createFunction(
       });
 
       await step.run("update-ticket-status", async () => {
-        await Ticket.findByIdAndUpdate(ticket._id, { status: "TODO" });
+        await Ticket.findByIdAndUpdate(ticket._id, {status: "In Progress", });
       });
 
       const aiResponse = await analyzeTicket(ticket);
+
+      console.log("🧠 AI response:", aiResponse);
 
       const relatedSkills = await step.run("ai-processing", async () => {
         let skills = [];
@@ -41,7 +44,9 @@ export const onTicketCreation = inngest.createFunction(
             relatedSkills: aiResponse.relatedSkills,
           });
           skills = aiResponse.relatedSkills;
-        }
+        } else {
+          console.log("❌ AI response missing or empty");
+        }      
         return skills;
       });
 
