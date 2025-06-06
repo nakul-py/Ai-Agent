@@ -13,7 +13,6 @@ function Admin() {
     try {
         const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/auth/users`, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
@@ -36,7 +35,7 @@ function Admin() {
 
   const handleEditClick = (user) => {
     setEditingUser(user.email);
-    setFormData({ role: user.role, skills: user.skills.join(", ") });
+    setFormData({ role: user.role, skills: user.skills?.join(", ") });
   }
 
   const handleUpdate = async () => {
@@ -75,7 +74,7 @@ function Admin() {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
     setFilteredUsers(
-        users.filter(user =>
+        users.filter((user) =>
           user.email.toLowerCase().includes(query) // ||
         //   user.role.toLowerCase().includes(query) ||
         //   user.skills.some(skill => skill.toLowerCase().includes(query))

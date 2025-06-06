@@ -39,6 +39,11 @@ export default function Navbar() {
           <>
             <span className="btn btn-sm btn-ghost text-sm bg-slate-700">
               {"👋 " + user?.username || "User"}
+              {user && user?.role === "admin" ? (
+              <Link to="/admin" className="btn btn-sm">
+                Admin
+              </Link>
+            ) : null}
             </span>
             <button onClick={handleLogout} className="btn btn-sm btn-ghost color: white bg-rose-600 hover:bg-rose-800 text-sm">
               Logout
