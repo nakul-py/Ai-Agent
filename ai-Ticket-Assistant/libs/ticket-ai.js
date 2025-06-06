@@ -23,8 +23,9 @@ IMPORTANT:
 Repeat: Do not wrap your output in markdown or code fences.`,
   });
 
-  const response =
-    await supportAgent.run(`You are a ticket triage agent. Only return a strict JSON object with no extra text, headers, or markdown.
+  let response;
+   try{
+    response = await supportAgent.run(`You are a ticket triage agent. Only return a strict JSON object with no extra text, headers, or markdown.
         
 Analyze the following support ticket and provide a JSON object with:
 
@@ -49,14 +50,41 @@ Ticket information:
 - Title: ${ticket.title}
 - Description: ${ticket.description}`);
 
-  const raw = response.output[0].content;
+try {
+  const raw = response?.output?.[0]?.content;
+  console.log("🧠 Raw Gemini response:", raw);
+  console.log("🟢 Calling Gemini with:", ticket.title, ticket.description);
 
-  try {
-    const match = raw.match(/```json\s*([\s\S]*?)\s*```/i);
-    const jsonString = match ? match[1] : raw.trim();
-    return JSON.parse(jsonString);
-  } catch (error) {
-    console.error("Error parsing JSON response:", error);
+
+  if (!raw) {
+    console.error("❌ Gemini returned empty or malformed output.");
     return null;
   }
+
+  // Try to extract JSON between ```json blocks first
+  let jsonString = raw;
+
+  const match = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (match) {
+    jsonString = match[1];
+  } else {
+    // If there are extra lines, try to isolate the first valid JSON object
+    const firstBrace = raw.indexOf("{");
+    const lastBrace = raw.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1) {
+      jsonString = raw.slice(firstBrace, lastBrace + 1);
+    }
+  }
+
+const parsed = JSON.parse(jsonString);
+
+return parsed;
+} catch (error) {
+console.error("❌ Error parsing Gemini response:", error);
+console.log("🔍 Gemini raw output for debugging:", response?.output?.[0]?.content);
+return null;
+} } catch (error) {
+  console.error("❌ Error running Gemini:", error);
+  return null;
+}
 };
