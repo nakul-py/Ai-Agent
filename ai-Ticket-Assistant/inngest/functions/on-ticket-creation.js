@@ -60,15 +60,27 @@ export const onTicketCreation = inngest.createFunction(
             },
           },
         });
+
+        if (!user) {
+          user = await User.findOne({
+            role: "moderator",
+          });
+        }
+
         if (!user) {
           user = await User.findOne({
             role: "admin",
           });
         }
 
-        await Ticket.findByIdAndUpdate(ticket._id, {
-          assignedTo: user?._id || null,
-        });
+        if (user) {
+          await Ticket.findByIdAndUpdate(ticket._id, {
+            assignedTo: user._id,
+          });
+        } else {
+          console.log("❌ No moderator or admin found to assign the ticket.");
+        }
+        
         return user;
       });
 
