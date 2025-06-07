@@ -21,31 +21,45 @@ export default function Navbar() {
     <div className="navbar bg-base-200">
       <div className="flex-1">
         <Link to="/" className="btn btn-link text-xl">
-        <Logo width="25%" />
+          <Logo width="25%" />
         </Link>
-
       </div>
       <div className="flex gap-2">
         {!token ? (
           <>
-            <Link to="/signup" className="btn btn-sm btn-ghost color: white bg-blue-600 hover:bg-blue-700 text-sm">
+            <Link
+              to="/signup"
+              className="btn btn-sm btn-ghost color: white bg-blue-600 hover:bg-blue-700 text-sm"
+            >
               Signup
             </Link>
-            <Link to="/login" className="btn btn-sm btn-ghost color: white bg-green-600 hover:bg-green-700 text-sm">
+            <Link
+              to="/login"
+              className="btn btn-sm btn-ghost color: white bg-green-600 hover:bg-green-700 text-sm"
+            >
               Login
             </Link>
           </>
         ) : (
           <>
-            <span className="btn btn-sm btn-ghost text-sm bg-slate-700">
-              {"👋 " + user?.username || "User"}
+            <Link to="/" className="btn btn-sm btn-ghost text-sm bg-slate-700">
+              {"👋 " + (user?.username || "User")}
+            </Link>
+            <span>
               {user && user?.role === "admin" ? (
-              <Link to="/admin" className="btn btn-sm">
-                Admin
-              </Link>
-            ) : null}
+                <Link
+                  to="/admin"
+                  className="btn btn-sm btn-ghost text-sm bg-teal-800"
+                >
+                  Admin
+                </Link>
+              ) : null}
             </span>
-            <button onClick={handleLogout} className="btn btn-sm btn-ghost color: white bg-rose-600 hover:bg-rose-800 text-sm">
+
+            <button
+              onClick={handleLogout}
+              className="btn btn-sm btn-ghost color: white bg-rose-600 hover:bg-rose-800 text-sm"
+            >
               Logout
             </button>
           </>

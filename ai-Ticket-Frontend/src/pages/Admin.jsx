@@ -18,8 +18,8 @@ function Admin() {
       });
       const data = await res.json();
       if (res.ok) {
-        setUsers(data);
-        setFilteredUsers(data);
+        setUsers(data.users);
+        setFilteredUsers(data.users);
       } else {
         console.log(data.error);
       }
@@ -75,12 +75,37 @@ function Admin() {
     setSearchQuery(query);
     setFilteredUsers(
         users.filter((user) =>
-          user.email.toLowerCase().includes(query) // ||
-        //   user.role.toLowerCase().includes(query) ||
-        //   user.skills.some(skill => skill.toLowerCase().includes(query))
+          user.email.toLowerCase().includes(query)  ||
+          user.role.toLowerCase().includes(query) ||
+          user.skills.some(skill => skill.toLowerCase().includes(query))
         )
     )
   }
+
+  const handleDelete = async (userId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+  
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`, // Ensure the token is passed for authentication
+        },
+      });
+  
+      if (res.ok) {
+        console.log("User deleted successfully");
+        fetchUsers(); // Refresh the user list after deletion
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete user");
+      }
+    } catch (error) {
+      console.error("Error deleting user", error);
+      alert("An error occurred while deleting the user.");
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto mt-10">
@@ -92,7 +117,7 @@ function Admin() {
         value={searchQuery}
         onChange={handleSearch}
       />
-      {filteredUsers.map((user) => (
+      {Array.isArray(filteredUsers) && filteredUsers.map((user) => (
         <div
           key={user._id}
           className="bg-base-100 shadow rounded p-4 mb-4 border"
@@ -156,7 +181,13 @@ function Admin() {
             >
               Edit
             </button>
-          )}
+          )} {""}
+          <button
+            className="btn btn-error btn-sm mt-2"
+            onClick={() => handleDelete(user._id)}
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>
