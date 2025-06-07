@@ -78,27 +78,37 @@ export const logout = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const { skills = [], role, email } = req.body;
+
   try {
+    // Only allow admin to update roles/skills
     if (req.user?.role !== "admin") {
       return res
         .status(403)
         .json({ error: "🔴 Forbidden: Only admins can update user roles." });
     }
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ error: "🔴 User not found" });
     }
 
-    User.updateOne(
-      { email },
-      {username},
-      { skills: skills.length ? skills : user.skills, role }
-    );
+    // Prepare update object
+    const update = {
+      role,
+      skills: skills.length ? skills : user.skills,
+    };
+
+    await User.updateOne({ email }, update);
+
     return res.json({ message: "🔵 User updated successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Update failed", details: error.message });
+    console.error("🔴 Error updating user:", error);
+    return res
+      .status(500)
+      .json({ error: "Update failed", details: error.message });
   }
 };
+
 
 export const getUsers = async (req, res) => {
   try {

@@ -3,7 +3,7 @@ import Ticket from "../models/ticket.js";
 
 export const createTicket = async (req, res) => {
   try {
-    const { title, description , priority, assignedTo, deadline, relatedSkills, helpfulNotes} = req.body;
+    const { title, description, priority, assignedTo, deadline, relatedSkills, helpfulNotes } = req.body;
     if (!title || !description) {
       return res
         .status(400)
@@ -12,23 +12,29 @@ export const createTicket = async (req, res) => {
     const newTicket = await Ticket.create({
       title,
       description,
-      createdBy: req.user._id.toString(),
-      assignedTo,
+      createdBy: req.user?._id?.toString() ?? null,
+      assignedTo: assignedTo ? assignedTo.toString() : null,
     });
+
+    if (!newTicket) {
+      return res
+        .status(500)
+        .json({ message: "Failed to create ticket", error: "Ticket creation failed" });
+    }
 
     await inngest.send({
       name: "ticket/created",
       data: {
-        ticketId: ( newTicket)._id.toString(),
+        ticketId: newTicket._id.toString(),
         title,
         description,
         status: "TODO",
         priority: priority || "Low",
-        assignedTo: assignedTo || null,
+        assignedTo: assignedTo ? assignedTo.toString() : null,
         deadline: deadline || null,
         relatedSkills: relatedSkills || [],
         helpfulNotes: helpfulNotes || "",
-        createdBy: req.user._id.toString(),
+        createdBy: req.user?._id?.toString() ?? null,
       },
     });
     return res.status(201).json({
@@ -39,7 +45,7 @@ export const createTicket = async (req, res) => {
     console.error("Error creating ticket:", error);
     return res
       .status(500)
-      .json({ message: "Failed to create ticketddd", error: error.message });
+      .json({ message: "Failed to create ticket", error: error?.message ?? "Unknown error" });
   }
 };
 
@@ -50,13 +56,10 @@ export const getTickets = async (req, res) => {
 
     if (user.role !== "user") {
       tickets = await Ticket.find({})
-        .populate("createdBy", ["email", "_id"])
-        .populate("assignedTo", ["email", "username"])
-        .select("title description status assignedTo priority helpfulNotes relatedSkills createdAt")
+        .populate("assignedTo", ["email", "_id"])
         .sort({ createdAt: -1 });
     } else {
       tickets = await Ticket.find({ createdBy: user._id })
-        .populate("assignedTo", ["email", "username"])
         .select("title description status assignedTo priority helpfulNotes  relatedSkills createdAt")
         .sort({ createdAt: -1 });
     }
@@ -84,10 +87,8 @@ export const getTicket = async (req, res) => {
         _id: req.params.id,
         createdBy: user._id,
       }).select("title description status assignedTo priority helpfulNotes relatedSkills createdAt")
-        .populate("assignedTo", ["email", "username"]);
     }
     
-
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
