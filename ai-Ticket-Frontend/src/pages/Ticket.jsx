@@ -51,6 +51,16 @@ function Ticket() {
     );
   }
   const handleDelete = async () => {
+    if (!token) {
+      alert("You are not authorized to delete this ticket.");
+      return;
+    }
+
+    if (!id) {
+      alert("No ticket ID provided.");
+      return;
+    }
+
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this ticket?"
     );
@@ -67,13 +77,14 @@ function Ticket() {
         }
       );
 
-      if (res.ok) {
-        console.log("Ticket deleted successfully.");
-        navigate("/"); // Redirect to the tickets list or home page
-      } else {
+      if (!res.ok) {
         const data = await res.json();
         alert(data.message || "Failed to delete the ticket.");
+        return;
       }
+
+      console.log("Ticket deleted successfully.");
+      navigate("/");
     } catch (error) {
       console.error("Error deleting ticket:", error);
       alert("An error occurred while deleting the ticket.");
@@ -131,13 +142,9 @@ function Ticket() {
           </p>
         )}
 
-        {ticket.assignedTo && typeof ticket.assignedTo === "object" ? (
+        {ticket.assignedTo && (
           <p>
-            <strong>Assigned To:</strong> {ticket.assignedTo.email}
-          </p>
-        ) : (
-          <p>
-            <strong>Assigned To:</strong> Not assigned
+            <strong>Assigned To:</strong> {ticket.assignedTo?.email}
           </p>
         )}
 
