@@ -146,7 +146,7 @@ function Ticket() {
           </>
         )}
         <div className="mt-4">
-          <button onClick={handleDelete} className="btn btn-danger">
+          <button onClick={handleDelete} className="btn btn-danger hover:bg-red-700">
             Delete Ticket
           </button>
         </div>

@@ -52,8 +52,8 @@ Ticket information:
 
 try {
   const raw = response?.output?.[0]?.content;
-  console.log("🧠 Raw Gemini response:", raw);
-  console.log("🟢 Calling Gemini with:", ticket.title, ticket.description);
+  // console.log("🧠 Raw Gemini response:", raw);
+  // console.log("🟢 Calling Gemini with:", ticket.title, ticket.description);
 
 
   if (!raw) {

@@ -78,7 +78,7 @@ function Tickets() {
           value={form.title}
           onChange={handleChange}
           placeholder="Ticket Title"
-          className="input input-bordered w-full"
+          className="input input-success w-full"
           required
         />
         <textarea
@@ -86,12 +86,12 @@ function Tickets() {
           value={form.description}
           onChange={handleChange}
           placeholder="Ticket Description"
-          className="textarea textarea-bordered w-full"
+          className="textarea textarea-primary w-full"
           required
         />
         {error && <p className="text-red-500">{error}</p>}
         
-        <button className="btn btn-primary" type="submit" disabled={loading}>
+        <button className="btn btn-primary bg-sky-600 hover:bg-sky-800" type="submit" disabled={loading}>
           {loading ? "Submitting..." : "Submit Ticket"}
         </button>
       </form>

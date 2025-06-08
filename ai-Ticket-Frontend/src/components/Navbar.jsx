@@ -18,7 +18,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="navbar bg-base-200">
+    <div className="navbar bg-base-300">
       <div className="flex-1">
         <Link to="/" className="btn btn-link text-xl">
           <Logo width="25%" />
@@ -45,7 +45,7 @@ export default function Navbar() {
           <span>
             <Link
               to="/"
-              className="btn btn-sm btn-ghost color: white bg-sky-600 hover:bg-sky-700 text-sm"
+              className="btn btn-sm btn-ghost color: white bg-sky-600 hover:bg-sky-800 text-sm"
             >
               Home
             </Link>
@@ -57,7 +57,7 @@ export default function Navbar() {
               {user && user?.role === "admin" ? (
                 <Link
                   to="/admin"
-                  className="btn btn-sm btn-ghost text-sm bg-teal-800"
+                  className="btn btn-sm btn-ghost text-sm bg-teal-700 hover:bg-teal-800"
                 >
                   Admin
                 </Link>
