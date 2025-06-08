@@ -25,12 +25,12 @@ export const onTicketCreation = inngest.createFunction(
       });
 
       await step.run("update-ticket-status", async () => {
-        await Ticket.findByIdAndUpdate(ticket._id, {status: "In Progress", });
+        await Ticket.findByIdAndUpdate(ticket._id, {status: "TODO", });
       });
 
       const aiResponse = await analyzeTicket(ticket);
 
-      console.log("🧠 AI response:", aiResponse);
+      // console.log("🧠 AI response:", aiResponse);
 
       const relatedSkills = await step.run("ai-processing", async () => {
         let skills = [];
@@ -75,7 +75,7 @@ export const onTicketCreation = inngest.createFunction(
 
         if (user) {
           await Ticket.findByIdAndUpdate(ticket._id, {
-            assignedTo: user._id,
+            assignedTo: user._id || null,
           });
         } else {
           console.log("❌ No moderator or admin found to assign the ticket.");

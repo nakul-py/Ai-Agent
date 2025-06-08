@@ -25,12 +25,8 @@ export const onUserSignUp = inngest.createFunction(
                 \n\n
                 Thank you for signing up. We're excited to have you on board!`;
 
-        try {
-          await sendMail(user.email, subject, message);
-        } catch (mailError) {
-          console.error("❗❗Error sending welcome email:", mailError.message);
-          throw mailError;
-        }
+        await sendMail(email, subject, message);
+        console.log("✅ Email sent successfully to: " + email);
       });
 
       return { success: true };
