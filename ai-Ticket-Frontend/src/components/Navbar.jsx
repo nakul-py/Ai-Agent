@@ -42,6 +42,14 @@ export default function Navbar() {
           </>
         ) : (
           <>
+          <span>
+            <Link
+              to="/"
+              className="btn btn-sm btn-ghost color: white bg-sky-600 hover:bg-sky-700 text-sm"
+            >
+              Home
+            </Link>
+          </span> 
             <Link to="/" className="btn btn-sm btn-ghost text-sm bg-slate-700">
               {"👋 " + (user?.username || "User")}
             </Link>

@@ -110,49 +110,40 @@ function Ticket() {
             <p>
               <strong>Status:</strong> {ticket.status}
             </p>
+            {ticket.priority && (
+              <p>
+                <strong>Priority:</strong> {ticket.priority}
+              </p>
+            )}
+
+            {ticket.relatedSkills?.length > 0 && (
+              <p>
+                <strong>Related Skills:</strong>{" "}
+                {ticket.relatedSkills.join(", ")}
+              </p>
+            )}
+
+            {ticket.helpfulNotes && (
+              <div>
+                <strong>Helpful Notes:</strong>
+                <div className="prose max-w-none rounded mt-2">
+                  <ReactMarkdown>{ticket.helpfulNotes}</ReactMarkdown>
+                </div>
+              </div>
+            )}
+
+            {ticket.assignedTo && (
+              <p>
+                <strong>Assigned To:</strong> {ticket.assignedTo?.email}
+              </p>
+            )}
+
+            {ticket.createdAt && (
+              <p className="text-sm text-gray-500 mt-2">
+                Created At: {new Date(ticket.createdAt).toLocaleString()}
+              </p>
+            )}
           </>
-        )}
-
-        {ticket.priority && (
-          <p>
-            <strong>Priority:</strong> {ticket.priority}
-          </p>
-        )}
-
-        {ticket.relatedSkills?.length > 0 ? (
-          <p>
-            <strong>Related Skills:</strong> {ticket.relatedSkills.join(", ")}
-          </p>
-        ) : (
-          <p>
-            <strong>Related Skills:</strong> None
-          </p>
-        )}
-
-        {ticket.helpfulNotes ? (
-          <div>
-            <strong>Helpful Notes:</strong>
-            <div className="prose max-w-none rounded mt-2">
-              <ReactMarkdown>{ticket.helpfulNotes}</ReactMarkdown>
-            </div>
-          </div>
-        ) : (
-          <p>
-            <strong>Helpful Notes:</strong> None
-          </p>
-        )}
-
-        {ticket.assignedTo && (
-          <p>
-            <strong>Assigned To:</strong> {ticket.assignedTo?.email}
-          </p>
-        )}
-
-        {ticket.createdAt && (
-          <p>
-            <strong>Created At:</strong>{" "}
-            {new Date(ticket.createdAt).toLocaleString()}
-          </p>
         )}
         <div className="mt-4">
           <button onClick={handleDelete} className="btn btn-danger">
