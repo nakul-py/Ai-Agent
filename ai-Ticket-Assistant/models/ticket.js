@@ -17,7 +17,6 @@ const ticketSchema = new moongoose.Schema({
     type: moongoose.Schema.Types.ObjectId,
     ref: "User",
     default: null,
-    required: false,
   },
   priority: String,
   deadline: Date,

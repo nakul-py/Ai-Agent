@@ -3,7 +3,7 @@ import Ticket from "../models/ticket.js";
 
 export const createTicket = async (req, res) => {
   try {
-    const { title, description, priority, assignedTo, deadline, relatedSkills, helpfulNotes } = req.body;
+    const { title, description, } = req.body;
     if (!title || !description) {
       return res
         .status(400)
@@ -13,7 +13,6 @@ export const createTicket = async (req, res) => {
       title,
       description,
       createdBy: req.user?._id?.toString() ?? null,
-      assignedTo: assignedTo ? assignedTo.toString() : null,
     });
 
     if (!newTicket) {
@@ -28,12 +27,6 @@ export const createTicket = async (req, res) => {
         ticketId: newTicket._id.toString(),
         title,
         description,
-        status: "TODO",
-        priority: priority || "Low",
-        assignedTo: assignedTo ? assignedTo.toString() : null,
-        deadline: deadline || null,
-        relatedSkills: relatedSkills || [],
-        helpfulNotes: helpfulNotes || "",
         createdBy: req.user?._id?.toString() ?? null,
       },
     });
@@ -60,7 +53,7 @@ export const getTickets = async (req, res) => {
         .sort({ createdAt: -1 });
     } else {
       tickets = await Ticket.find({ createdBy: user._id })
-        .select("title description status assignedTo priority helpfulNotes  relatedSkills createdAt")
+        .select("title description status createdAt")
         .sort({ createdAt: -1 });
     }
     return res.status(200).json({ tickets });
@@ -78,7 +71,7 @@ export const getTicket = async (req, res) => {
     let ticket;
 
     if (user.role !== "user") {
-      ticket = await Ticket.findById(req.params.id).populate("createdBy", [
+      ticket = await Ticket.findById(req.params.id).populate("assignedTo", [
         "email",
         "_id",
       ]);
@@ -86,7 +79,7 @@ export const getTicket = async (req, res) => {
       ticket = await Ticket.findOne({
         _id: req.params.id,
         createdBy: user._id,
-      }).select("title description status assignedTo priority helpfulNotes relatedSkills createdAt")
+      }).select("title description status createdAt")
     }
     
     if (!ticket) {
