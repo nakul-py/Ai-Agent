@@ -10,17 +10,13 @@ import { onUserSignUp } from "./inngest/functions/on-signUP.js";
 import { onTicketDeletion } from "./inngest/functions/on-ticket-deletion.js";
 import User from "./models/user.js";
 
-
 import dotenv from "dotenv";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.use(cors(
-  {origin: "http://localhost:5173",
-  credentials: true}
-));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 
 app.use("/api/auth", userRoutes);
@@ -30,7 +26,7 @@ app.use(
   "/api/inngest",
   serve({
     client: inngest,
-    functions: [onTicketCreation, onUserSignUp , onTicketDeletion],
+    functions: [onTicketCreation, onUserSignUp, onTicketDeletion],
   })
 );
 
@@ -54,7 +50,9 @@ app.delete("/api/users/:id", async (req, res) => {
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     console.error("Error deleting user:", error);
-    res.status(500).json({ message: "Failed to delete user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete user", error: error.message });
   }
 });
 console.log("Connecting to MongoDB...");
