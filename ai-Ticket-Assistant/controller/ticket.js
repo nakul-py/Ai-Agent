@@ -3,7 +3,7 @@ import Ticket from "../models/ticket.js";
 
 export const createTicket = async (req, res) => {
   try {
-    const { title, description, } = req.body;
+    const { title, description } = req.body;
     if (!title || !description) {
       return res
         .status(400)
@@ -18,7 +18,10 @@ export const createTicket = async (req, res) => {
     if (!newTicket) {
       return res
         .status(500)
-        .json({ message: "Failed to create ticket", error: "Ticket creation failed" });
+        .json({
+          message: "Failed to create ticket",
+          error: "Ticket creation failed",
+        });
     }
 
     await inngest.send({
@@ -38,7 +41,10 @@ export const createTicket = async (req, res) => {
     console.error("Error creating ticket:", error);
     return res
       .status(500)
-      .json({ message: "Failed to create ticket", error: error?.message ?? "Unknown error" });
+      .json({
+        message: "Failed to create ticket",
+        error: error?.message ?? "Unknown error",
+      });
   }
 };
 
@@ -79,9 +85,9 @@ export const getTicket = async (req, res) => {
       ticket = await Ticket.findOne({
         _id: req.params.id,
         createdBy: user._id,
-      }).select("title description status createdAt")
+      }).select("title description status createdAt");
     }
-    
+
     if (!ticket) {
       return res.status(404).json({ message: "Ticket not found" });
     }
@@ -104,8 +110,16 @@ export const deleteTicket = async (req, res) => {
       return res.status(404).json({ message: "Ticket not found." });
     }
 
-    if (user.role !== "admin" && user.role !== "moderator" && ticket.createdBy.toString() !== user._id.toString()) {
-      return res.status(403).json({ message: "Forbidden: You are not authorized to delete this ticket." });
+    if (
+      user.role !== "admin" &&
+      user.role !== "moderator" &&
+      ticket.createdBy.toString() !== user._id.toString()
+    ) {
+      return res
+        .status(403)
+        .json({
+          message: "Forbidden: You are not authorized to delete this ticket.",
+        });
     }
 
     await Ticket.findByIdAndDelete(ticketId);
@@ -118,6 +132,8 @@ export const deleteTicket = async (req, res) => {
     return res.status(200).json({ message: "Ticket deleted successfully." });
   } catch (error) {
     console.error("Error deleting ticket:", error.message);
-    return res.status(500).json({ message: "Failed to delete ticket.", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to delete ticket.", error: error.message });
   }
 };

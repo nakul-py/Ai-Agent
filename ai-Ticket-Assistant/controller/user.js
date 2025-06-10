@@ -4,10 +4,15 @@ import User from "../models/user.js";
 import { inngest } from "../inngest/client.js";
 
 export const signup = async (req, res) => {
-  const { username ,email, password, skills = [] } = req.body;
+  const { username, email, password, skills = [] } = req.body;
   try {
     const hashPswd = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, password: hashPswd, skills });
+    const user = await User.create({
+      username,
+      email,
+      password: hashPswd,
+      skills,
+    });
 
     // Fire the Inngest event for user signup
     await inngest.send({
@@ -108,7 +113,6 @@ export const updateUser = async (req, res) => {
       .json({ error: "Update failed", details: error.message });
   }
 };
-
 
 export const getUsers = async (req, res) => {
   try {
