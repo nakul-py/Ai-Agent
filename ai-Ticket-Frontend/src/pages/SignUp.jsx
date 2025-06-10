@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
 import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import  Logo  from "../components/Logo";
+import Logo from "../components/Logo";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -30,8 +30,9 @@ function SignUp() {
     setLoading(true);
     setError("");
     try {
-        const serverUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
-    console.log("Server URL:", serverUrl);
+      const serverUrl =
+        import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+      console.log("Server URL:", serverUrl);
 
       const res = await fetch(`${serverUrl}/auth/signup`, {
         method: "POST",
@@ -61,20 +62,20 @@ function SignUp() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
       <div className="card w-full max-w-sm shadow-xl bg-base-100">
-      <div className="flex card-header justify-center pt-6">
-        <Logo width="30%"/>
+        <div className="flex card-header justify-center pt-6">
+          <Logo width="30%" />
         </div>
         <form onSubmit={handleSignup} className="card-body">
           <h2 className="card-title justify-center">Sign Up</h2>
           <p className="mt-2 text-center text-base text-white/60">
-          Already have an account?&nbsp;
-          <Link
-            to="/login"
-            className="font-medium text-primary transition-all duration-200 hover:underline  hover:text-blue-600"
-          >
-            Sign In
-          </Link>
-        </p>
+            Already have an account?&nbsp;
+            <Link
+              to="/login"
+              className="font-medium text-primary transition-all duration-200 hover:underline  hover:text-blue-600"
+            >
+              Sign In
+            </Link>
+          </p>
 
           <input
             type="text"
@@ -115,11 +116,7 @@ function SignUp() {
           </div>
 
           {/* Display error message */}
-          {error && (
-            <div className="text-red-500 text-sm mt-2">
-              {error}
-            </div>
-          )}
+          {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
           <div className="form-control mt-4">
             <button

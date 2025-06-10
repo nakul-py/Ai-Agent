@@ -56,8 +56,8 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
       <div className="card w-full max-w-sm shadow-xl bg-base-100">
-      <div className="flex card-header justify-center pt-6">
-        <Logo width="30%"/>
+        <div className="flex card-header justify-center pt-6">
+          <Logo width="30%" />
         </div>
         <form onSubmit={handleLogin} className="card-body">
           <h2 className="card-title justify-center">Login</h2>
@@ -98,7 +98,7 @@ function Login() {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
-          
+
           {/* Display error message */}
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
