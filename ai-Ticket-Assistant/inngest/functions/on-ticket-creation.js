@@ -2,14 +2,13 @@ import { inngest } from "../client.js";
 import User from "../../models/user.js";
 import { NonRetriableError } from "inngest";
 import { sendMail } from "../../libs/mailer.js";
-import Ticket  from "../../models/ticket.js";
+import Ticket from "../../models/ticket.js";
 import { analyzeTicket } from "../../libs/ticket-ai.js";
 
 export const onTicketCreation = inngest.createFunction(
   { id: "on-ticket-creation", retries: 2 },
   { event: "ticket/created" },
   async ({ event, step }) => {
-
     try {
       const { ticketId } = event.data;
 
@@ -25,7 +24,7 @@ export const onTicketCreation = inngest.createFunction(
       });
 
       await step.run("update-ticket-status", async () => {
-        await Ticket.findByIdAndUpdate(ticket._id, {status: "TODO", });
+        await Ticket.findByIdAndUpdate(ticket._id, { status: "TODO" });
       });
 
       const aiResponse = await analyzeTicket(ticket);
@@ -46,7 +45,7 @@ export const onTicketCreation = inngest.createFunction(
           skills = aiResponse.relatedSkills;
         } else {
           console.log("❌ AI response missing or empty");
-        }      
+        }
         return skills;
       });
 
@@ -80,7 +79,7 @@ export const onTicketCreation = inngest.createFunction(
         } else {
           console.log("❌ No moderator or admin found to assign the ticket.");
         }
-        
+
         return user;
       });
 

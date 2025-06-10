@@ -45,7 +45,8 @@ export const onTicketDeletion = inngest.createFunction(
       return {
         success: false,
         error:
-          error.message || "An error occurred while processing the ticket deletion.",
+          error.message ||
+          "An error occurred while processing the ticket deletion.",
       };
     }
   }
