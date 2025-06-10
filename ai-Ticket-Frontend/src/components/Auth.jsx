@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Auth({ children, protected: isProtected }) {
   const navigate = useNavigate();
@@ -11,9 +11,9 @@ function Auth({ children, protected: isProtected }) {
 
   useEffect(() => {
     if (isProtected && !token) {
-      navigate('/login', { replace: true });
+      navigate("/login", { replace: true });
     } else if (!isProtected && token) {
-      navigate('/', { replace: true });
+      navigate("/", { replace: true });
     } else {
       setLoading(false);
     }
