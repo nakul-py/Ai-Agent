@@ -111,4 +111,7 @@ The `.env.sample` file contains a template for the required environment variable
 
 ### ScreenRecord
 
+<div align="center">
 <video controls src="./ai-Ticket-Frontend/public/Screencast From 2025-06-09 18-35-43.mp4" title="Title"></video>
+
+</div>
