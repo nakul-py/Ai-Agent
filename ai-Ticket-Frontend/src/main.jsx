@@ -16,52 +16,52 @@ import Layout from "./components/Layout.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-    <BrowserRouter>
-    <Routes>
-  <Route path="/" element={<Layout />}>
-    <Route
-      index
-      element={
-        <Auth protected={true}>
-          <Tickets />
-        </Auth>
-      }
-    />
-    <Route
-      path="tickets/:id"
-      element={
-        <Auth protected={true}>
-          <TicketPage />
-        </Auth>
-      }
-    />
-    <Route
-      path="login"
-      element={
-        <Auth protected={false}>
-          <Login />
-        </Auth>
-      }
-    />
-    <Route
-      path="signup"
-      element={
-        <Auth protected={false}>
-          <SignUp />
-        </Auth>
-      }
-    />
-    <Route
-      path="admin"
-      element={
-        <Auth protected={true} admin={true}>
-          <Admin />
-        </Auth>
-      }
-    />
-  </Route>
-</Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route
+              index
+              element={
+                <Auth protected={true}>
+                  <Tickets />
+                </Auth>
+              }
+            />
+            <Route
+              path="tickets/:id"
+              element={
+                <Auth protected={true}>
+                  <TicketPage />
+                </Auth>
+              }
+            />
+            <Route
+              path="login"
+              element={
+                <Auth protected={false}>
+                  <Login />
+                </Auth>
+              }
+            />
+            <Route
+              path="signup"
+              element={
+                <Auth protected={false}>
+                  <SignUp />
+                </Auth>
+              }
+            />
+            <Route
+              path="admin"
+              element={
+                <Auth protected={true} admin={true}>
+                  <Admin />
+                </Auth>
+              }
+            />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </Provider>
   </StrictMode>
 );

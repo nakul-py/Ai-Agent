@@ -27,7 +27,7 @@ function Tickets() {
 
   useEffect(() => {
     fetchTickets();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
@@ -90,8 +90,12 @@ function Tickets() {
           required
         />
         {error && <p className="text-red-500">{error}</p>}
-        
-        <button className="btn btn-primary bg-sky-600 hover:bg-sky-800" type="submit" disabled={loading}>
+
+        <button
+          className="btn btn-primary bg-sky-600 hover:bg-sky-800"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? "Submitting..." : "Submit Ticket"}
         </button>
       </form>
@@ -115,7 +119,6 @@ function Tickets() {
       </div>
     </div>
   );
-
 }
 
 export default Tickets;
