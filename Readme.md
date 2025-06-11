@@ -112,3 +112,15 @@ The `.env.sample` file contains a template for the required environment variable
 ### ScreenRecord
 
 ![AI Agent Demo](./ai-Ticket-Frontend/public/Ai_Agent.gif)
+
+---
+
+## Contributors
+
+We warmly welcome and appreciate all the amazing contributors who have helped make **AI Agent** better! 🎉
+
+<!-- A big thank you to everyone who has contributed their time, effort, and expertise to this project. Your contributions—whether through code, design, testing, documentation, or feedback—are what make this project thrive. -->
+
+### Want to Contribute?
+
+We’d love to have you onboard! Check out our [Contributing Guidelines](./Contributing.md) to get started. Feel free to submit a pull request or open an issue. Let’s build something amazing together! 🚀
