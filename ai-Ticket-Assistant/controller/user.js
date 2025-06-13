@@ -5,8 +5,14 @@ import { inngest } from "../inngest/client.js";
 
 export const signup = async (req, res) => {
   const { username, email, password, skills = [] } = req.body;
+
+  if (!email || !password || !username) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
   try {
     const hashPswd = await bcrypt.hash(password, 10);
+
     const user = await User.create({
       username,
       email,
@@ -14,12 +20,9 @@ export const signup = async (req, res) => {
       skills,
     });
 
-    // Fire the Inngest event for user signup
     await inngest.send({
       name: "user.signup",
-      data: {
-        email,
-      },
+      data: { email },
     });
 
     const token = jwt.sign(
@@ -35,9 +38,11 @@ export const signup = async (req, res) => {
 
     res.json({ user, token });
   } catch (error) {
+    console.error("Signup Error:", error); // 👈 Add this
     res.status(500).json({ error: "Signup failed", details: error.message });
   }
 };
+
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
