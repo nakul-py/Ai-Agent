@@ -29,7 +29,7 @@ function Login() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/auth/login`, {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
