@@ -34,7 +34,7 @@ function SignUp() {
         import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
       console.log("Server URL:", serverUrl);
 
-      const res = await fetch(`${serverUrl}/auth/signup`, {
+      const res = await fetch(`${serverUrl}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
