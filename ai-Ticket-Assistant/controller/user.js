@@ -20,6 +20,10 @@ export const signup = async (req, res) => {
       skills,
     });
 
+    if (!user) {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
     await inngest.send({
       name: "user.signup",
       data: { email },
@@ -58,12 +62,23 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(401).json({ error: "🔴 User not found" });
     }
+
+    if (!user.password) {
+      return res.status(401).json({ error: "🔴 Password not found" });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(401).json({ error: "🔴 Invalid credentials" });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ error: "🔴 JWT secret not found" });
     }
 
     const token = jwt.sign(
@@ -79,6 +94,12 @@ export const login = async (req, res) => {
 
     res.json({ user, token });
   } catch (error) {
+    if (error instanceof ReferenceError) {
+      console.error("Error:", error.message);
+      return res.status(500).json({ error: "Something went wrong", details: error.message });
+    }
+
+    console.error("Login Error:", error);
     res.status(500).json({ error: "Login failed", details: error.message });
   }
 };
