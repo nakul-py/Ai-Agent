@@ -86,6 +86,7 @@ function Login() {
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
+              autoComplete="current-password"
               className="input input-success w-5/6 pr-10 text-sm"
               value={form.password}
               onChange={handleChange}

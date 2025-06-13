@@ -31,12 +31,9 @@ function SignUp() {
     setError("");
   
     try {
-      const BASE_URL =
-        import.meta.env.DEV
-          ? "/api" // uses Vite proxy in dev
-          : import.meta.env.VITE_SERVER_URL || "https://ai-agent-backend-eta.vercel.app/api";
-  
-      const res = await fetch(`${BASE_URL}/auth/signup`, {
+      const serverUrl = import.meta.env.VITE_SERVER_URL || "/api";
+
+      const res = await fetch(`${serverUrl}/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,6 +102,7 @@ function SignUp() {
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
+              autoComplete="new-password"
               className="input input-success w-5/6 pr-10 text-sm"
               value={form.password}
               onChange={handleChange}
