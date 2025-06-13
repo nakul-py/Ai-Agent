@@ -38,7 +38,17 @@ export const signup = async (req, res) => {
 
     res.json({ user, token });
   } catch (error) {
-    console.error("Signup Error:", error); // 👈 Add this
+    console.error("Signup Error:", error);
+
+    if (error.code === 11000) {
+      const duplicateKey = Object.keys(error.keyValue)[0];
+      const message = `${duplicateKey.charAt(0).toUpperCase() + duplicateKey.slice(1)} already exists`;
+
+      return res.status(400).json({
+        error: message,
+      });
+    }
+
     res.status(500).json({ error: "Signup failed", details: error.message });
   }
 };
