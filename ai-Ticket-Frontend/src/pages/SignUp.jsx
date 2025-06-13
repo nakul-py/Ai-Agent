@@ -29,22 +29,24 @@ function SignUp() {
     e.preventDefault();
     setLoading(true);
     setError("");
+  
     try {
-      const serverUrl =
-        import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
-      console.log("Server URL:", serverUrl);
-
-      const res = await fetch(`${serverUrl}/auth/signup`, {
+      const BASE_URL =
+        import.meta.env.DEV
+          ? "/api" // uses Vite proxy in dev
+          : import.meta.env.VITE_SERVER_URL || "https://ai-agent-backend-eta.vercel.app/api";
+  
+      const res = await fetch(`${BASE_URL}/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(form),
       });
-
+  
       const data = await res.json();
       console.log("Signup success:", data);
-
+  
       if (res.ok) {
         dispatch(login({ token: data.token, user: data.user }));
         navigate("/");
@@ -58,6 +60,7 @@ function SignUp() {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
